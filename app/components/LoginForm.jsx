@@ -29,16 +29,16 @@ export default function LoginForm() {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       const json = await res.json();
-      console.log(json)
       setMsg(json.detail);
       setIsLoading(false);
       setCookie("token", json.token);
       setCookie("email", json.email);
-      // router.push("/");
+      if(json.token){
+        router.push("/")
+      }
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
-      setMsg('Error signing up, please check your credentials');
+      setMsg('Error signing in, please check your credentials');
     }
   };
 
@@ -109,9 +109,9 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isloading}
-              className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              className="flex w-full justify-center disabled:bg-gray-500 disabled:cursor-not-allowed rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
-              Sign in
+              {isloading ? "Loading..." : "Sign in"}
             </button>
             <span className="inline-block my-4 text-xs text-white ">
               Don't have an account?{" "}

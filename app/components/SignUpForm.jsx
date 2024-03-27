@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -20,27 +21,30 @@ export default function SignUpForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://assessment-server-r6hy.onrender.com/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://assessment-server-r6hy.onrender.com/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      if(formData.password !== formData.confirmPassword) {
+      if (formData.password !== formData.confirmPassword) {
         throw new Error("Passwords do not match");
       }
 
       const json = await res.json();
       setMsg(json.detail);
       setIsLoading(false);
-      router.push('/login')
+      router.push("/login");
     } catch (error) {
       console.log(error);
-      setMsg('Error signing up, please check your credentials');
+      setMsg("Error signing up, please check your credentials");
       setIsLoading(false);
     }
   };
@@ -54,7 +58,12 @@ export default function SignUpForm() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
+        <form
+          className="space-y-6"
+          action="#"
+          method="POST"
+          onSubmit={handleSubmit}
+        >
           <div>
             <label
               htmlFor="email"
@@ -123,8 +132,8 @@ export default function SignUpForm() {
                 className="block w-full rounded-md border-0 bg-white/5 p-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
               />
             </div>
+            {(formData.password !== formData.confirmPassword) && <p className="text-red-500">Passwords do not match</p>}
           </div>
-            
 
           <div>
             <button
@@ -136,6 +145,16 @@ export default function SignUpForm() {
           </div>
         </form>
         {msg && <p className="text-red-500">{msg}</p>}
+
+        <p className="mt-10 text-sm text-center text-gray-500">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="font-semibold leading-6 text-indigo-500 hover:text-indigo-400"
+          >
+            Log in
+          </Link>
+        </p>
       </div>
     </div>
   );

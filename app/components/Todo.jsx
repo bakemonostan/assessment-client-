@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useCookies, removeAllCookies } from "react-cookie";
+import { useCookies, removeCookie } from "react-cookie";
 
 
 const TodoApp = ({ data }) => {
@@ -34,25 +34,34 @@ const TodoApp = ({ data }) => {
     }
   };
 
-  const signout = async () => {
-    if (cookies.email) {
-      // Clear cookies on the server-side
-      const res = await fetch("/api/clear-cookies", {
-        method: "GET",
-        headers: {
-          Cookie: document.cookie,
-        },
-      });
 
-      if (res.ok) {
-        // Clear cookies on the client-side
-        clearAllCookies();
+  const signout = async () => {
+    try {
+
+      await fetch("/api/clear-cookies", {
+        method: "POST",
+      });
+  
+      removeCookie('email');
+      removeCookie('token');
+      if(!cookies.email){
         router.push("/login");
-      } else {
-        console.error("Failed to clear cookies on the server");
       }
+  console.log(!cookies.email)
+    } catch (error) {
+      console.error("Error clearing cookies:", error);
+
     }
   };
+
+  // const signout = () => {
+  //   if(cookies.email){
+  //     clearAllCookies()
+  //     removeCookie('email')
+  //     removeCookie('token')
+  //     router.push("/login");
+  //   }
+  // };
 
   const postData = async (newTodo) => {
     try {

@@ -29,19 +29,16 @@ export default function Home() {
   }
 
   useEffect(() => {
-    // Check if cookies.email and cookies.token are falsy (undefined or empty)
-    if (cookies.email == undefined || cookies.token == undefined) {
+    if (cookies.email === undefined || cookies.token === undefined) {
       router.push("/login");
     }
-      getTodos();
-
-    /*  */
-  }, [ cookies.email, cookies.token ]);
+      getTodos()
+  }, [ cookies.email, cookies.token, router ]);
 
   return (
     <section className="relative flex flex-col">
       <div className="bg-[url('/bg-mobile-dark.jpg')] min-h-[19rem] bg-no-repeat bg-cover md:bg-[url('/bg-desktop-dark.jpg')]"></div>
-      {data && <TodoApp data={data} />}
+       {data && <TodoApp data={data} />}
     </section>
   );
 }
